@@ -18,6 +18,29 @@ RESOURCES_STORAGE_PATH = getattr(settings,
                                  'PLUGINS_STORAGE_PATH', 'resources/%Y')
 
 
+class GeopackageUnapprovedManager(models.Manager):
+    """Custom Queryset Manager for Unapproved GeoPackage"""
+    def get_queryset(self):
+        return super().get_queryset().filter(
+                approved=False, require_action=False
+            ).order_by('upload_date').distinct()
+
+
+class GeopackageApprovedManager(models.Manager):
+    """Custom Queryset Manager for Unapproved GeoPackage"""
+    def get_queryset(self):
+        return super().get_queryset().filter(approved=True) \
+            .order_by('upload_date')
+
+
+class GeopackageRequireactionManager(models.Manager):
+    """Custom Queryset Manager for reviewed GeoPackage requires an action"""
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(approved=False, require_action=True)\
+            .order_by('upload_date').distinct()
+
+
 class Geopackage(models.Model):
     """
     GeoPackage Model.
@@ -53,7 +76,8 @@ class Geopackage(models.Model):
                                         'GeoPackage.'),
                             max_length=256,
                             blank=False,
-                            null=False)
+                            null=False,
+                            unique=True)
     description = models.TextField(
         _('Description'),
         help_text=_('A description of this GeoPackage.'),
@@ -101,6 +125,12 @@ class Geopackage(models.Model):
         help_text=_('Set to True if you require creator to update '
                     'its GeoPackage.'),
         db_index=True)
+
+    # Manager
+    objects = models.Manager()
+    approved_objects = GeopackageApprovedManager()
+    unapproved_objects = GeopackageUnapprovedManager()
+    requireaction_objects = GeopackageRequireactionManager()
 
     @property
     def get_creator_name(self):

@@ -44,12 +44,12 @@
                 <dd>{{ geopackage_detail.get_creator_name|title }}</dd>
                 <dt>GeoPackage File</dt>
                 <dd>
-{#                    <a class="btn btn-primary btn-mini delete" href="{% url 'style_download' style_detail.id %}" title="{% trans "Download" %}"><i class="icon-download-alt"></i> Download</a>#}
+                    <a class="btn btn-primary btn-mini delete" href="{% url 'geopackage_download' geopackage_detail.id %}" title="{% trans "Download" %}"><i class="icon-download-alt"></i> Download</a>
                 </dd>
 
                 <hr />
                 {% if reviewer %}
-                    {% with review=package_detail.packagereview_set.last %}
+                    {% with review=geopackage_detail.geopackagereview_set.last %}
                     <dt>Last Review</dt>
                     <dd>{{ review.comment }}<br/>
                         <i><small>Reviewed by {{ reviewer|title }} {{ review.review_date|naturaltime }}</small></i>

@@ -23,15 +23,31 @@
 
 {% block menu %}
 {{ block.super }}
-<a class="btn btn-block btn-primary btn-large" href="{% url "geopackage_create" %}"><i class="icon-upload icon-white icon-2x" style=" vertical-align: middle;"></i> {% trans "Upload GeoPackage" %}</a>
-<h3>GeoPackage</h3>
-<ul class="nav nav-list">
-    <li><a href="#">{% trans "Approved" %} <sup><span class="badge badge-info" id="all"></span></sup></a></li>
+    <a class="btn btn-block btn-primary btn-large" href="{% url "geopackage_create" %}"><i class="icon-upload icon-white icon-2x" style=" vertical-align: middle;"></i> {% trans "Upload GeoPackage" %}</a>
+    <h3>GeoPackage</h3>
+    <ul class="nav nav-list">
+        <li><a href="{% url 'geopackage_list' %}">{% trans "Approved" %} <sup><span class="badge badge-info" id="all"></span></sup></a></li>
         {% if user.is_authenticated %}
-        <li><a href="#">{% trans "Waiting Review" %} <sup><span class="badge badge-info" id="waiting_review"></span></sup></a></li>
-        <li><a href="#">{% trans "Requiring Update" %} <sup><span class="badge badge-info" id="requiring_action"></span></sup></a></li>
+        <li><a href="{% url 'geopackage_unapproved' %}">{% trans "Waiting Review" %} <sup><span class="badge badge-info" id="waiting_review"></span></sup></a></li>
+        <li><a href="{% url 'geopackage_require_action' %}">{% trans "Requiring Update" %} <sup><span class="badge badge-info" id="requiring_action"></span></sup></a></li>
         {% endif %}
-</ul>
+    </ul>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'geopackage_nav_content' %}",
+                success: function (response){
+                    if(response.waiting_review){$("#waiting_review").text(response.waiting_review)};
+                    if(response.require_action){$("#requiring_action").text(response.require_action)};
+                }
+            })
+
+            // edit search input from base template, in order to use it for geopackage
+            $("form.navbar-search").attr("action", "{% url 'geopackage_list' %}");
+            })
+    </script>
 
 {% endblock %}
 
