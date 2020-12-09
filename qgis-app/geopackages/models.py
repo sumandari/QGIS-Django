@@ -1,10 +1,5 @@
-"""
-TODO:
-- pagination
-- email notification
-- list page and custom queryset manager
-"""
 import datetime
+import os
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -100,7 +95,7 @@ class Geopackage(models.Model):
         _('GeoPackage file'),
         help_text=_('A GeoPackage file. The filesize must less than 1MB '),
         upload_to=GEOPACKAGES_STORAGE_PATH,
-        validators=[FileExtensionValidator(allowed_extensions=['gpkg'])],
+        validators=[FileExtensionValidator(allowed_extensions=['gpkg', 'zip'])],
         null=False)
 
     # counter
@@ -140,6 +135,10 @@ class Geopackage(models.Model):
 
     def increase_download_counter(self):
         self.download_count += 1
+
+    def extension(self):
+        name, extension = os.path.splitext(self.gpkg_file.name)
+        return extension
 
     def get_absolute_url(self):
         return reverse('geopackage_detail', args=(self.id,))
