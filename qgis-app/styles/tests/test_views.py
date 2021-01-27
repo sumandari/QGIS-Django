@@ -15,6 +15,8 @@ STYLE_DIR = os.path.join(os.path.dirname(__file__), "stylefiles")
 
 
 class TestPageUserAnonymous(TestCase):
+    fixtures = ['fixtures/simplemenu.json']
+
     def test_url(self):
         url = reverse('style_list')
         response = self.client.get(url)
@@ -30,7 +32,7 @@ class TestPageUserAnonymous(TestCase):
 
 
 class TestUploadStyle(TestCase):
-    fixtures = ['fixtures/auth.json']
+    fixtures = ['fixtures/auth.json', 'fixtures/simplemenu.json']
 
     @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
     def setUp(self):
@@ -82,7 +84,7 @@ class TestUploadStyle(TestCase):
 @override_settings(
     EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 class TestModeration(TestCase):
-    fixtures = ['fixtures/auth.json']
+    fixtures = ['fixtures/auth.json', 'fixtures/simplemenu.json']
 
     @classmethod
     @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
@@ -249,7 +251,7 @@ class TestModeration(TestCase):
 
 
 class TestDownloadStyles(TestCase):
-    fixtures = ['fixtures/auth.json']
+    fixtures = ['fixtures/auth.json', 'fixtures/simplemenu.json']
 
     def setUp(self):
         StyleType.objects.create(
@@ -283,7 +285,8 @@ class TestDownloadStyles(TestCase):
 
 
 class TestStyleApprovalNotify(TestCase):
-    fixtures = ['fixtures/auth.json', 'fixtures/styles.json']
+    fixtures = ['fixtures/auth.json', 'fixtures/styles.json',
+                'fixtures/simplemenu.json']
 
     def setUp(self):
         self.creator = User.objects.get(pk=2)
@@ -329,7 +332,8 @@ class TestStyleApprovalNotify(TestCase):
 
 @override_settings(MEDIA_ROOT="styles/tests/stylefiles/")
 class TestSearch(TestCase):
-    fixtures = ['fixtures/styles.json', 'fixtures/auth.json']
+    fixtures = ['fixtures/styles.json', 'fixtures/auth.json',
+                'fixtures/simplemenu.json']
 
     def setUp(self):
         self.staff = User.objects.get(pk=3)
