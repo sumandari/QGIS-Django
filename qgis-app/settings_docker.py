@@ -63,6 +63,8 @@ INSTALLED_APPS = [
 
     'feedjack',
 
+    'rest_framework',
+
     # styles:
     'styles',
     # geopackages

@@ -481,3 +481,31 @@ def resource_nav_content(request, model):
                     'waiting_review': waiting_review,
                     'require_action': require_action}
     return JsonResponse(count_object, status=200)
+
+
+from base.permissions import IsHasAccessOrReadOnly
+from rest_framework import generics
+
+class ResourceAPIList(generics.ListAPIView):
+    permission_class = [IsHasAccessOrReadOnly]
+
+    def get_queryset(self):
+        """Return queryset by filter value"""
+        qs = self.model.approved_objects.all()
+        q = self.request.query_params.get('q', None)
+        if q:
+            qs = qs.annotate(
+                search=(SearchVector('name')
+                        + SearchVector('description')
+                        + SearchVector('creator__username')
+                        + SearchVector('creator__first_name')
+                        + SearchVector('creator__last_name'))
+            ).filter(search=q)
+        return qs
+
+
+class ResourceAPIDetail(generics.RetrieveAPIView):
+    permission_class = [IsHasAccessOrReadOnly]
+
+    def get_queryset(self):
+        """Return detail """

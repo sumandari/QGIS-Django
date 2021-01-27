@@ -1,15 +1,17 @@
 from django.urls import path
 
 from geopackages.views import (GeopackageCreateView,
-                                GeopackageDetailView,
-                                GeopackageUpdateView,
-                                GeopackageListView,
-                                GeopackageDeleteView,
-                                GeopackageUnapprovedListView,
-                                GeopackageRequireActionListView,
-                                GeopackageReviewView,
-                                GeopackageDownloadView,
-                                geopackage_nav_content)
+                               GeopackageDetailView,
+                               GeopackageUpdateView,
+                               GeopackageListView,
+                               GeopackageDeleteView,
+                               GeopackageUnapprovedListView,
+                               GeopackageRequireActionListView,
+                               GeopackageReviewView,
+                               GeopackageDownloadView,
+                               geopackage_nav_content,
+                               # API
+                               GeopackageAPIList)
 
 
 urlpatterns = [
@@ -34,4 +36,7 @@ urlpatterns = [
 
     # JSON
     path('sidebarnav/', geopackage_nav_content, name="geopackage_nav_content"),
+
+    # API
+    path('api/', GeopackageAPIList.as_view())
 ]
