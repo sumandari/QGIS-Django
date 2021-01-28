@@ -484,10 +484,10 @@ def resource_nav_content(request, model):
 
 
 from base.permissions import IsHasAccessOrReadOnly
-from rest_framework import generics
+from rest_framework import generics, permissions
 
-class ResourceAPIList(generics.ListAPIView):
-    permission_class = [IsHasAccessOrReadOnly]
+class ResourceAPIList(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         """Return queryset by filter value"""
@@ -505,7 +505,9 @@ class ResourceAPIList(generics.ListAPIView):
 
 
 class ResourceAPIDetail(generics.RetrieveAPIView):
-    permission_class = [IsHasAccessOrReadOnly]
+    permission_classes = [IsHasAccessOrReadOnly]
 
     def get_queryset(self):
         """Return detail """
+        qs = self.model.approved_objects.all()
+        return qs

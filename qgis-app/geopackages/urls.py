@@ -1,5 +1,7 @@
 from django.urls import path
 
+from rest_framework.urlpatterns import format_suffix_patterns
+
 from geopackages.views import (GeopackageCreateView,
                                GeopackageDetailView,
                                GeopackageUpdateView,
@@ -11,7 +13,8 @@ from geopackages.views import (GeopackageCreateView,
                                GeopackageDownloadView,
                                geopackage_nav_content,
                                # API
-                               GeopackageAPIList)
+                               GeopackageAPIList,
+                               GeopackageDetailAPI)
 
 
 urlpatterns = [
@@ -35,8 +38,15 @@ urlpatterns = [
          name='geopackage_require_action'),
 
     # JSON
-    path('sidebarnav/', geopackage_nav_content, name="geopackage_nav_content"),
+    path('sidebarnav/', geopackage_nav_content, name='geopackage_nav_content'),
 
-    # API
-    path('api/', GeopackageAPIList.as_view())
+
 ]
+
+urlpatterns += format_suffix_patterns([
+    # API
+    path('api/geopackages/', GeopackageAPIList.as_view(),
+         name='geopackage-list'),
+    path('api/geopackages/<int:pk>/', GeopackageDetailAPI.as_view(),
+         name='geopackage-detail')
+])
