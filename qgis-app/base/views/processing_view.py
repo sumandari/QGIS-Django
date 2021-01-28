@@ -504,8 +504,9 @@ class ResourceAPIList(generics.ListCreateAPIView):
         return qs
 
 
-class ResourceAPIDetail(generics.RetrieveAPIView):
-    permission_classes = [IsHasAccessOrReadOnly]
+class ResourceAPIDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsHasAccessOrReadOnly]
 
     def get_queryset(self):
         """Return detail """

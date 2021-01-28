@@ -17,7 +17,7 @@ class IsHasAccessOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        user = self.request.user
+        user = request.user
         is_manager = user.groups.filter(name=MANAGER_GROUP).exists()
 
         return user == obj.creator or user.is_staff or is_manager
