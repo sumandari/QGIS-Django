@@ -79,6 +79,11 @@ urlpatterns += [
     url(r'^$', homepage),
 ]
 
+# API
+urlpatterns += [
+    url(r'^api/v1/', include('api.urls')),
+]
+
 
 if settings.DEBUG:
     import debug_toolbar

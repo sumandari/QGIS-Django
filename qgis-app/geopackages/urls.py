@@ -11,10 +11,7 @@ from geopackages.views import (GeopackageCreateView,
                                GeopackageRequireActionListView,
                                GeopackageReviewView,
                                GeopackageDownloadView,
-                               geopackage_nav_content,
-                               # API
-                               GeopackageAPIList,
-                               GeopackageDetailAPI)
+                               geopackage_nav_content)
 
 
 urlpatterns = [
@@ -40,13 +37,5 @@ urlpatterns = [
     # JSON
     path('sidebarnav/', geopackage_nav_content, name='geopackage_nav_content'),
 
-
 ]
 
-urlpatterns += format_suffix_patterns([
-    # API
-    path('api/geopackages/', GeopackageAPIList.as_view(),
-         name='geopackage-list'),
-    path('api/geopackages/<int:pk>/', GeopackageDetailAPI.as_view(),
-         name='geopackage-detail')
-])

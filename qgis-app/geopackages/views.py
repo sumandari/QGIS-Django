@@ -73,14 +73,3 @@ def geopackage_nav_content(request):
     model = ResourceMixin.model
     response = resource_nav_content(request, model)
     return response
-
-
-
-from .serializers import GeopackageSerializer, GeopackageThumbnailSerializer
-from base.views.processing_view import ResourceAPIList, ResourceAPIDetail
-
-class GeopackageAPIList(ResourceMixin, ResourceAPIList):
-    serializer_class = GeopackageSerializer
-
-class GeopackageDetailAPI(ResourceMixin, ResourceAPIDetail):
-    serializer_class = GeopackageThumbnailSerializer

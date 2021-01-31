@@ -14,8 +14,12 @@ def HttpAuthMiddleware(get_response):
         if auth_basic:
             import base64
             username , dummy, password = base64.decodestring(auth_basic[6:].encode('utf8')).partition(b':')
-            username = username.decode('utf8')
-            password = password.decode('utf8')
+            try:
+                username = username.decode('utf8')
+                password = password.decode('utf8')
+            except UnicodeDecodeError:
+                username = username
+                password = password
 
             user = auth.authenticate(username=username, password=password)
             if user:

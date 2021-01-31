@@ -503,12 +503,20 @@ class ResourceAPIList(generics.ListCreateAPIView):
             ).filter(search=q)
         return qs
 
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
 
 class ResourceAPIDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsHasAccessOrReadOnly]
+    http_method_names = ['get', 'put', 'patch']
 
     def get_queryset(self):
         """Return detail """
         qs = self.model.approved_objects.all()
         return qs
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)

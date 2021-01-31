@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
+from base.validator import filesize_validator
+
 
 class ResourceBaseSerializer(serializers.HyperlinkedModelSerializer):
     creator = serializers.ReadOnlyField(source='get_creator_name')
@@ -12,14 +14,20 @@ class ResourceBaseSerializer(serializers.HyperlinkedModelSerializer):
                   'creator',
                   'upload_date',
                   'download_count',
-                  'description']
+                  'description',
+                  'file',
+                  'thumbnail_image']
+
+    def validate(self, attrs):
+        file = attrs.get('file')
+        filesize_validator(file)
+        return attrs
 
 
 class ResourceThumbnailBaseSerializer(ResourceBaseSerializer):
 
     class Meta:
-        fields = ResourceBaseSerializer.Meta.fields + ['thumbnail',
-                                                       'thumbnail_image']
+        fields = ResourceBaseSerializer.Meta.fields + ['thumbnail']
 
     # A thumbnail image, sorl options and read-only
     thumbnail = HyperlinkedSorlImageField(
@@ -28,7 +36,4 @@ class ResourceThumbnailBaseSerializer(ResourceBaseSerializer):
         source='thumbnail_image',
         read_only=True
     )
-
-    # A larger version of the image, allows writing
-    thumbnail_image = HyperlinkedSorlImageField('1024')
 
